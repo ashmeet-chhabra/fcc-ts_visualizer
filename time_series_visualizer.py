@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -11,6 +11,7 @@ df = pd.read_csv('fcc-forum-pageviews.csv', parse_dates=['date'], index_col=['da
 # Clean data
 # df = df.query('value > value.quantile(0.025) and value < value.quantile(1-0.025)')
 df = df[(df['value'] > df['value'].quantile(0.025)) & (df['value'] < df['value'].quantile(1 - 0.025))]
+months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
 def draw_line_plot():
     # Draw line plot
@@ -35,7 +36,6 @@ def draw_bar_plot():
     fig = df_bar.plot(kind='bar').get_figure()
     plt.xlabel('Years') 
     plt.ylabel('Average Page Views') 
-    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'September', 'October', 'November', 'December']
     plt.legend(months, title='Months')
 
 
@@ -51,17 +51,18 @@ def draw_box_plot():
     df_box['month'] = [d.strftime('%b') for d in df_box.date]
     # Draw box plots (using Seaborn)
 
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
     ax1.set_title('Year-wise Box Plot (Trend)')
     ax1.set_xlabel('Year')
     ax1.set_ylabel('Page Views')
-    sns.boxplot(data=df_box, x='month', y='value', ax=ax2)
     sns.boxplot(data=df_box, x='year', y='value', ax=ax1)
+    sns.boxplot(data=df_box, x='month', y='value', ax=ax2, order=months)
     ax2.set_title('Month-wise Box Plot (Seasonality)')
     ax2.set_xlabel('Month')
     ax2.set_ylabel('Page Views')
     plt.tight_layout()
-
 
 
     # Save image and return fig (don't change this part)
