@@ -10,7 +10,6 @@ df = pd.read_csv('fcc-forum-pageviews.csv', parse_dates=['date'], index_col=['da
 # Clean data
 df = df.query('value > value.quantile(0.025) and value < value.quantile(1-0.025)')
 
-
 def draw_line_plot():
     # Draw line plot
     fig = plt.figure(figsize=(12, 6))
@@ -26,12 +25,14 @@ def draw_line_plot():
 
 def draw_bar_plot():
     # Copy and modify data for monthly bar plot
-    df_bar = None
+    df_bar = df.groupby(['year', 'month'])['value'].sum()
 
     # Draw bar plot
-
-
-
+    fig = df_bar.plot(kind='bar').get_figure()
+    plt.xlabel('Years') 
+    plt.ylabel('Average Page Views') 
+    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'September', 'October', 'November', 'December']
+    plt.legend(months, title='Months')
 
 
     # Save image and return fig (don't change this part)
